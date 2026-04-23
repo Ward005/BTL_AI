@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Checkers Clone</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- MENU -->
+  <div class="top-menu text-center">
+    <button class="menu-btn" data-target="top">New Game</button>
+    <button class="menu-btn" data-target="rules">Rules</button>
+    <button class="menu-btn" data-target="about">About</button>
+    <button class="menu-btn" data-target="gamePlay">Gameplay</button>
+    <button class="menu-btn" id="btnOption">Options</button>
+  </div>
+
+  <!-- GAME -->
+  <div id="top" class="game-container">
+    <div class="player d-none">
+      <h5>Player 1</h5>
+      <div class="score">0</div>
+
+      <!-- Lịch sử nước đi -->
+      <div class="moves" id="moves-red"></div>
+    </div>
+
+    <div class="board index" id="board"></div>
+    <div class="mode" id="mode">
+      <h4>Mode</h4>
+
+      <div class="mode-options">
+        <div class="mode-item active" data-mode="pvai">
+          PvAI
+        </div>
+
+        <div class="mode-item" data-mode="aiai">
+          AI vs AI
+        </div>
+        <div class="difficulty d-none" id="difficulty">
+          <h5>Độ khó</h5>
+          <div class="diff-item active" data-diff="easy">Dễ</div>
+          <div class="diff-item" data-diff="hard">Khó</div>
+        </div>
+      </div>
+
+      <button id="startBtn">Start</button>
+    </div>
+
+    <div class="player d-none">
+      <h5>You</h5>
+      <div class="score">0</div>
+
+      <!-- Lịch sử nước đi -->
+      <div class="moves" id="moves-black"></div>
+    </div>
+  </div>
+
+  <!-- RULES -->
+  <div id="rules" class="info-section">
+    <h3>Rules</h3>
+    <p>Checkers is a classic board game, dating back to around 3000 BC. It is very simple, but a lot of fun! Checkers is
+      known as Draughts in England and there are multiple variations of it all around the world. The game is played on
+      an 8x8 chequered board, essentially a chess board. Each player starts with 12 pieces, placed on the dark squares
+      of the board closest to them. The objective of the game is to capture all the opponent's pieces by jumping over
+      them.</p>
+  </div>
+
+  <!-- ABOUT -->
+  <div id="about" class="info-section">
+    <h3>About</h3>
+    <p>Checkers is one of those games, much like Backgammon, that we've always wanted to make, but needed to learn it
+      properly first. Well, we finally learnt it, made it and here it is. I hope you enjoy it! Checkers is the 31st game
+      we made for Cardgames.io.</p>
+  </div>
+  <!-- ABOUT -->
+  <div id="gamePlay" class="info-section">
+    <h3>Gameplay</h3>
+    <p>Pieces can only move diagonally on the dark squares, the light squares of the board are never used. A normal move
+      is moving a piece diagonally forward one square. The initial pieces can only move forward diagonally, not
+      backwards. You cannot move onto a square that is occupied by another piece. However, if an opponent piece is on
+      the square diagonally in front of you and the square behind it is empty then you can (and must!) jump over it
+      diagonally, thereby capturing it. If you land on a square where you can capture another opponent piece you must
+      jump over that piece as well, immediately. One turn can capture many pieces. It is required to jump over pieces
+      whenever you can.<br><br>
+      If a piece reaches the end row of the board, on the opponent's side, it becomes a King. Kings can move diagonally
+      forwards and backwards, making them more powerful in jumping over opponent pieces. However, if you jump over a
+      piece to become a King you can not jump backwards over another piece in the same move, you have to wait until the
+      next turn to start moving backwards.<br><br>
+      Jumping over opponents is required. However, if you have two possible moves, where one jumps over one opponent and
+      the other jumps over two or more opponents you are not required to take the jump with the most opponents captured,
+      you are just required to take any jump move.</p>
+  </div>
+
+  <!-- OPTIONS POPUP -->
+  <div id="popup" class="popup d-none">
+    <div class="popup-content">
+      <h4>OPTIONS</h4>
+
+      <label>Chưa có gì</label>
+      <!-- <input type="range" min="1" max="5"> -->
+
+      <br><br>
+
+      <!-- <label>
+        <input type="checkbox"> Highlight moves
+      </label> -->
+
+      <br><br>
+
+      <button class="btn btn-dark" id="closePopup">Close</button>
+    </div>
+  </div>
+  <div id="resultPopup" class="popup d-none">
+    <div class="popup-content">
+      <img id="resultImg" src="" style="width:120px;margin-bottom:10px;">
+      <h3 id="resultText"></h3>
+
+      <button id="playAgain" class="btn btn-success mt-3">Play Again</button>
+      <button id="goMenu" class="btn btn-secondary mt-2">Main Menu</button>
+    </div>
+  </div>
+  <button id="backToTop">
+    ↑
+  </button>
+
+  <script src="script.js"></script>
+  <script src="script2.js"></script>
+</body>
+
+</html>
