@@ -172,3 +172,74 @@ board.addEventListener("click", (e) => {
     }
   }
 });
+// ===== VALID MOVE =====
+function isValidMove(from, to, piece) {
+  const fr = +from.dataset.row;
+  const fc = +from.dataset.col;
+  const tr = +to.dataset.row;
+  const tc = +to.dataset.col;
+
+  const dr = tr - fr;
+  const dc = tc - fc;
+
+  if (to.children.length > 0) return false;
+
+  const absR = Math.abs(dr);
+  const absC = Math.abs(dc);
+
+  // ăn
+  if (absR === 2 && absC === 2) {
+    const mid = getCell(fr + dr / 2, fc + dc / 2);
+    if (mid && mid.children.length && isEnemy(piece, mid.children[0])) {
+      return "capture";
+    }
+  }
+
+  // đi thường
+  if (absR === 1 && absC === 1) {
+    if (isKing(piece)) return "move";
+
+    if (piece.classList.contains("red") && dr === -1) return "move";
+    if (piece.classList.contains("black") && dr === 1) return "move";
+  }
+
+  return false;
+}
+// ===== CHECK CAPTURE =====
+function canCapture(from, piece) {
+  const r = +from.dataset.row;
+  const c = +from.dataset.col;
+
+  const dirs = isKing(piece)
+    ? [
+        [1, 1],
+        [1, -1],
+        [-1, 1],
+        [-1, -1],
+      ]
+    : piece.classList.contains("red")
+      ? [
+          [-1, -1],
+          [-1, 1],
+        ]
+      : [
+          [1, -1],
+          [1, 1],
+        ];
+
+  for (let [dr, dc] of dirs) {
+    const mid = getCell(r + dr, c + dc);
+    const land = getCell(r + dr * 2, c + dc * 2);
+
+    if (
+      mid &&
+      land &&
+      mid.children.length &&
+      isEnemy(piece, mid.children[0]) &&
+      land.children.length === 0
+    )
+      return true;
+  }
+
+  return false;
+}
