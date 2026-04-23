@@ -100,3 +100,75 @@ document.getElementById("startBtn").onclick = () => {
     aiAIGameLoop();
   }
 };
+// ===== CLICK =====
+board.addEventListener("click", (e) => {
+  if (!gameStarted) return;
+
+  if (gameMode === "aiai") return;
+
+  const piece = e.target.closest(".piece");
+  const cell = e.target.closest(".cell");
+
+  // chọn quân
+  if (piece) {
+    if (currentPlayer === "red" && !piece.classList.contains("red")) return;
+    if (currentPlayer === "black" && !piece.classList.contains("black")) return;
+
+    document
+      .querySelectorAll(".piece")
+      .forEach((p) => p.classList.remove("selected"));
+
+    piece.classList.add("selected");
+    selectedPiece = piece;
+    return;
+  }
+
+  // di chuyển
+  if (cell && selectedPiece) {
+    const from = selectedPiece.parentElement;
+    const result = isValidMove(from, cell, selectedPiece);
+
+    if (!result) return;
+
+    if (result === "capture") {
+      const mid = getCell(
+        (+from.dataset.row + +cell.dataset.row) / 2,
+        (+from.dataset.col + +cell.dataset.col) / 2,
+      );
+      mid.innerHTML = "";
+      noCaptureCount = 0;
+    } else {
+      noCaptureCount++;
+    }
+
+    cell.appendChild(selectedPiece);
+
+    addMove(
+      { row: +from.dataset.row, col: +from.dataset.col },
+      { row: +cell.dataset.row, col: +cell.dataset.col },
+      currentPlayer,
+    );
+
+    // king
+    const row = +cell.dataset.row;
+    if (selectedPiece.classList.contains("red") && row === 0)
+      selectedPiece.classList.add("king");
+
+    if (selectedPiece.classList.contains("black") && row === 7)
+      selectedPiece.classList.add("king");
+
+    selectedPiece.classList.remove("selected");
+    selectedPiece = null;
+
+    if (checkWin()) return;
+
+    currentPlayer = "black";
+
+    if (gameMode === "pvai") {
+      setTimeout(() => {
+        aiMove("black");
+        checkWin(); // thêm dòng này cho chắc
+      }, 800);
+    }
+  }
+});
