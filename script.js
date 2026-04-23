@@ -514,3 +514,67 @@ function hasAnyMove(player) {
   const moves = getAllMoves(state, player);
   return moves.length > 0;
 }
+
+function aiMove(player) {
+  console.log(`[AI DEBUG] aiMove called for ${player}`);
+
+  if (!gameStarted) return;
+
+  const depth = aiDifficulty === "hard" ? 4 : 2;
+
+  const bestMove = getBestMove(player, depth);
+
+  if (!bestMove) {
+    if (checkWin()) return;
+    showResult(player === "red" ? "black" : "red");
+    return;
+  }
+
+  const from = getCell(bestMove.from[0], bestMove.from[1]);
+  const to = getCell(bestMove.to[0], bestMove.to[1]);
+
+  makeMove(from, to, player);
+}
+function makeMove(from, to, player) {
+  const piece = from.children[0];
+  const result = isValidMove(from, to, piece);
+
+  if (result === "capture") {
+    const midr = (+from.dataset.row + +to.dataset.row) / 2;
+    const midc = (+from.dataset.col + +to.dataset.col) / 2;
+    const mid = getCell(midr, midc);
+    if (mid) mid.innerHTML = "";
+    noCaptureCount = 0;
+  } else {
+    noCaptureCount++;
+  }
+
+  to.appendChild(piece);
+
+  const row = +to.dataset.row;
+  if (player === "black" && row === 7) piece.classList.add("king");
+  if (player === "red" && row === 0) piece.classList.add("king");
+
+  addMove(
+    { row: +from.dataset.row, col: +from.dataset.col },
+    { row: +to.dataset.row, col: +to.dataset.col },
+    player,
+  );
+
+  if (checkWin()) return;
+
+  currentPlayer = player === "black" ? "red" : "black";
+}
+function aiAIGameLoop() {
+  if (!gameStarted || gameMode !== "aiai") return;
+
+  setTimeout(() => {
+    if (gameStarted && gameMode === "aiai") {
+      aiMove(currentPlayer);
+      if (gameStarted) aiAIGameLoop();
+    }
+  }, 800);
+}
+
+// ===== INIT =====
+initBoard();
