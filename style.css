@@ -1,0 +1,364 @@
+/* ===== RESET ===== */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: "Segoe UI", Arial;
+  background: #f2f2f2;
+}
+
+/* ===== MENU ===== */
+.top-menu {
+  text-align: center;
+  padding: 15px 0;
+  margin-top: 25px;
+}
+
+.menu-btn {
+  border: none;
+  background: none;
+  margin: 0 12px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.menu-btn:hover {
+  color: #0d6efd;
+}
+
+/* ===== MAIN LAYOUT ===== */
+.game-container {
+  margin-top: -80px;
+  width: 100%;
+  height: calc(100vh - 60px); /* trừ menu */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+
+  background: linear-gradient(135deg, #f5f7fa, #e4ecf7);
+}
+
+/* ===== BOARD ===== */
+.board {
+  width: 650px;
+  height: 650px;
+
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+
+  border: 5px solid #333;
+  border-radius: 12px;
+  overflow: hidden;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+/* Ô cờ */
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Màu bàn cờ */
+.dark {
+  background: #769656;
+}
+
+.light {
+  background: #eeeed2;
+}
+
+/* ===== MODE PANEL ===== */
+.mode {
+  width: 260px;
+  height: 450px;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Title */
+.mode h4 {
+  margin: 0;
+}
+
+/* Options */
+.mode-options {
+  width: 100%;
+}
+
+.mode-item {
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+
+  border: 2px solid #ccc;
+  transition: 0.2s;
+}
+
+.mode-item:hover {
+  border-color: #0d6efd;
+}
+
+/* Selected */
+.mode-item.active,
+.diff-item.active {
+  background: #0d6efd;
+  color: white;
+  border-color: #0d6efd;
+}
+
+.difficulty {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.diff-item {
+  padding: 8px;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid #ccc;
+  transition: 0.2s;
+  font-size: 14px;
+}
+
+.diff-item:hover {
+  border-color: #0d6efd;
+}
+
+/* Start button */
+#startBtn {
+  margin-top: auto;
+  width: 100%;
+  padding: 12px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #198754;
+  color: white;
+  font-weight: bold;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#startBtn:hover {
+  background: #157347;
+}
+
+/* ===== POPUP ===== */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  background: rgba(0, 0, 0, 0.6);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background: white;
+  padding: 25px;
+  width: 320px;
+
+  border-radius: 12px;
+  text-align: center;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+  animation: scaleIn 0.25s ease;
+}
+
+/* Animation */
+@keyframes scaleIn {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ===== INFO SECTION ===== */
+.info-section {
+  width: 70%;
+  margin: 80px auto;
+
+  background: white;
+  padding: 20px;
+
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Nút scroll lên đầu */
+#backToTop {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 70px;
+  height: 80px;
+
+  border: none;
+  border-radius: 20px;
+
+  background: #0d6efd;
+  color: white;
+  font-size: 60px;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+}
+
+/* Khi hiện */
+#backToTop.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Hover */
+#backToTop:hover {
+  background: #0b5ed7;
+}
+
+/* ===== QUÂN CỜ ===== */
+.piece {
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+
+  cursor: pointer;
+  transition: 0.15s;
+  user-select: none;
+}
+
+/* màu đơn giản */
+.piece.red {
+  background: #d01d2c;
+  user-select: none;
+}
+
+.piece.black {
+  background: #222;
+}
+
+/* hover nhẹ */
+.piece:hover {
+  transform: scale(1.1);
+}
+
+/* click */
+.piece:active {
+  transform: scale(0.95);
+}
+
+/* selected (dùng sau) */
+.piece.selected {
+  outline: 3px solid yellow;
+}
+
+/* king */
+.piece.king {
+  position: relative;
+}
+
+.piece.king::after {
+  content: "👑";
+  position: absolute;
+
+  width: 40%;
+  height: 40%;
+  border-radius: 50%;
+
+  background: gold;
+}
+.popup img {
+  object-fit: contain;
+}
+
+.player {
+  width: 160px;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* score */
+.score {
+  font-size: 26px;
+  font-weight: bold;
+  color: #0d6efd;
+  margin-bottom: 10px;
+}
+
+/* box nước đi */
+.moves {
+  width: 100%;
+  height: 250px;
+  overflow-y: auto;
+
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px;
+
+  font-size: 14px;
+  background: #fafafa;
+}
+
+/* từng dòng nước đi */
+.move-item {
+  padding: 4px 6px;
+  border-bottom: 1px solid #eee;
+}
+
+/* màu theo bên */
+.move-red {
+  color: #d9534f;
+}
+
+.move-black {
+  color: #333;
+}
