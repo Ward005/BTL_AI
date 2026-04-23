@@ -392,3 +392,84 @@ function applyMove(state, move) {
 
   return newState;
 }
+
+// ================= EVALUATE =================
+function evaluate(state) {
+  let score = 0;
+
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      const p = state[r][c];
+      if (!p) continue;
+
+      let val = p.king ? 3 : 1;
+
+      if (p.color === "black") score += val;
+      else score -= val;
+    }
+  }
+
+  return score;
+}
+function minimax(state, depth, alpha, beta, maximizingPlayer) {
+  if (depth === 0) {
+    return evaluate(state);
+  }
+
+  const player = maximizingPlayer ? "black" : "red";
+  const moves = getAllMoves(state, player);
+
+  if (maximizingPlayer) {
+    let maxEval = -Infinity;
+    for (let move of moves) {
+      const newState = applyMove(state, move);
+      const evalScore = minimax(newState, depth - 1, alpha, beta, false);
+      maxEval = Math.max(maxEval, evalScore);
+      alpha = Math.max(alpha, evalScore);
+      if (beta <= alpha) break;
+    }
+    return maxEval;
+  } else {
+    let minEval = Infinity;
+    for (let move of moves) {
+      const newState = applyMove(state, move);
+      const evalScore = minimax(newState, depth - 1, alpha, beta, true);
+      minEval = Math.min(minEval, evalScore);
+      beta = Math.min(beta, evalScore);
+      if (beta <= alpha) break;
+    }
+    return minEval;
+  }
+}
+function getBestMove(player, depth) {
+  console.log(`[AI DEBUG] getBestMove ${player} depth ${depth}, computing...`);
+  const state = getBoardState();
+  const moves = getAllMoves(state, player);
+  console.log(`[AI DEBUG] Found ${moves.length} moves`);
+
+  let bestMove = null;
+  let bestScore = player === "black" ? -Infinity : Infinity; // black max, red min?
+
+  for (let move of moves) {
+    const newState = applyMove(state, move);
+    const score = minimax(
+      newState,
+      depth - 1,
+      -Infinity,
+      Infinity,
+      player !== "black",
+    );
+    console.log(`Move ${JSON.stringify(move)} score: ${score}`);
+
+    if (
+      (player === "black" && score > bestScore) ||
+      (player === "red" && score < bestScore)
+    ) {
+      bestScore = score;
+      bestMove = move;
+    }
+  }
+
+  console.log(`[AI DEBUG] Best move:`, bestMove);
+  return bestMove;
+}
