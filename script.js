@@ -274,3 +274,121 @@ function toChessNotation(row, col) {
   const letters = "ABCDEFGH";
   return letters[col] + (8 - row);
 }
+// ===== AI =====
+// ================= STATE (LOGIC) =================
+function getBoardState() {
+  const state = Array.from({ length: 8 }, () => Array(8).fill(null));
+
+  document.querySelectorAll(".cell").forEach((cell) => {
+    const r = +cell.dataset.row;
+    const c = +cell.dataset.col;
+
+    if (cell.children.length) {
+      const p = cell.children[0];
+      state[r][c] = {
+        color: p.classList.contains("red") ? "red" : "black",
+        king: p.classList.contains("king"),
+      };
+    }
+  });
+
+  return state;
+}
+// ================= MOVE GENERATION =================
+function getAllMoves(state, player) {
+  const moves = [];
+
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      if ((r + c) % 2 === 0) continue; // skip light squares
+      const piece = state[r][c];
+      if (!piece || piece.color !== player) continue;
+
+      console.log(
+        `[MOVES DEBUG] Piece ${player} at [${r},${c}] king:${piece.king}`,
+      );
+
+      const dirs = piece.king
+        ? [
+            [1, 1],
+            [1, -1],
+            [-1, 1],
+            [-1, -1],
+          ]
+        : player === "black"
+          ? [
+              [1, 1],
+              [1, -1],
+            ]
+          : [
+              [-1, 1],
+              [-1, -1],
+            ];
+
+      for (let [dr, dc] of dirs) {
+        let nr = r + dr;
+        let nc = c + dc;
+
+        // move - check target dark
+        if (
+          nr >= 0 &&
+          nr < 8 &&
+          nc >= 0 &&
+          nc < 8 &&
+          (nr + nc) % 2 !== 0 &&
+          state[nr]?.[nc] === null
+        ) {
+          moves.push({ from: [r, c], to: [nr, nc] });
+        }
+
+        // capture - check land dark
+        let cr = r + dr * 2;
+        let cc = c + dc * 2;
+        if (
+          cr >= 0 &&
+          cr < 8 &&
+          cc >= 0 &&
+          cc < 8 &&
+          (cr + cc) % 2 !== 0 &&
+          state[nr]?.[nc] &&
+          state[nr][nc].color !== player &&
+          state[cr]?.[cc] === null
+        ) {
+          moves.push({
+            from: [r, c],
+            to: [cr, cc],
+            capture: [nr, nc],
+          });
+        }
+      }
+    }
+  }
+
+  return moves;
+}
+// ================= APPLY MOVE =================
+function applyMove(state, move) {
+  const newState = JSON.parse(JSON.stringify(state));
+
+  const [fr, fc] = move.from;
+  const [tr, tc] = move.to;
+
+  newState[tr][tc] = newState[fr][fc];
+  newState[fr][fc] = null;
+
+  if (move.capture) {
+    const [cr, cc] = move.capture;
+    newState[cr][cc] = null;
+  }
+
+  // phong vua
+  if (newState[tr][tc]) {
+    if (newState[tr][tc].color === "black" && tr === 7)
+      newState[tr][tc].king = true;
+
+    if (newState[tr][tc].color === "red" && tr === 0)
+      newState[tr][tc].king = true;
+  }
+
+  return newState;
+}
