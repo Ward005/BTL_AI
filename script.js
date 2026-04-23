@@ -243,3 +243,34 @@ function canCapture(from, piece) {
 
   return false;
 }
+// ===== HELPERS =====
+function getCell(r, c) {
+  return document.querySelector(`.cell[data-row='${r}'][data-col='${c}']`);
+}
+function isEnemy(a, b) {
+  return (
+    (a.classList.contains("red") && b.classList.contains("black")) ||
+    (a.classList.contains("black") && b.classList.contains("red"))
+  );
+}
+function isKing(p) {
+  return p.classList.contains("king");
+}
+function addMove(from, to, player) {
+  const box =
+    player === "red"
+      ? document.getElementById("moves-red")
+      : document.getElementById("moves-black");
+
+  const div = document.createElement("div");
+  div.classList.add("move-item");
+
+  div.innerText = `${toChessNotation(from.row, from.col)} → ${toChessNotation(to.row, to.col)}`;
+
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+function toChessNotation(row, col) {
+  const letters = "ABCDEFGH";
+  return letters[col] + (8 - row);
+}
