@@ -473,3 +473,44 @@ function getBestMove(player, depth) {
   console.log(`[AI DEBUG] Best move:`, bestMove);
   return bestMove;
 }
+function checkWin() {
+  const redPieces = document.querySelectorAll(".piece.red").length;
+  const blackPieces = document.querySelectorAll(".piece.black").length;
+
+  // hết quân
+  if (redPieces === 0) return (showResult("black"), true);
+  if (blackPieces === 0) return (showResult("red"), true);
+
+  // KHÔNG CÒN NƯỚC ĐI
+  if (!hasAnyMove("red")) return (showResult("black"), true);
+  if (!hasAnyMove("black")) return (showResult("red"), true);
+
+  // hòa
+  if (noCaptureCount >= 20) {
+    showResult("draw");
+    return true;
+  }
+
+  return false;
+}
+function showResult(r) {
+  gameStarted = false;
+
+  const popup = document.getElementById("resultPopup");
+  const text = document.getElementById("resultText");
+
+  popup.classList.remove("d-none");
+
+  if (gameMode === "aiai") {
+    text.innerText =
+      r === "draw" ? "Hòa 🤝" : r === "red" ? "Red thắng!" : "Black thắng!";
+  } else {
+    text.innerText =
+      r === "red" ? "Bạn thắng 🎉" : r === "black" ? "Bạn thua 😢" : "Hòa 🤝";
+  }
+}
+function hasAnyMove(player) {
+  const state = getBoardState();
+  const moves = getAllMoves(state, player);
+  return moves.length > 0;
+}
